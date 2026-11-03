@@ -1,6 +1,6 @@
 {
   "name": "PerfectBlock",
-  "version_number": "0.3.2",
+  "version_number": "0.3.3",
   "website_url": "https://github.com/tutu8420/PerfectBlock",
   "description": "学习每只怪物的攻击节奏，在命中前自动按下格挡触发原版完美格挡；不改伤害结算与格挡判定，挥刀时不会抢你的攻击。",
   "dependencies": []

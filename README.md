@@ -5,7 +5,7 @@
 **实测完美格挡率 90.3%**（145 次结算：完美 131 / 普通 10 / 漏挡 4，默认参数，训练假人 + 哥布林）；其中**关闭「切换格挡」的长按模式 91%、0 漏挡**。
 
 > **先说明一点：这个模组对抗打击的完美格挡是需要学习的，并不是一上来就能完美格挡。**
-> 每只怪物的每套攻击动作都要单独攒样本（默认 3 次、命中点离散度 ≤ 5%），凑够了才会开始替你按。没打过的怪，它不会挡——先看清招式，是这个模组的一部分。
+> 每只怪物的每套攻击动作都要单独攒样本（默认 5 次、命中点离散度 ≤ 5%），凑够了才会开始替你按。没打过的怪，它不会挡——先看清招式，是这个模组的一部分。
 
 > **最佳手感：关闭游戏「辅助功能」里的「切换格挡」，用长按模式。** 实测长按模式 0 漏挡，切换模式因为靠按键边沿翻转，约 4% 的几率会把盾关掉（见下面的实测数据）。
 
@@ -67,10 +67,10 @@
 
 | 键 | 默认 | 说明 |
 |---|---|---|
-| Enable Auto Block | false | 总开关。关掉时只学习、只写日志 |
-| Detect Range | 25 | 只观察这个距离（米）内的敌人 |
+| Enable Auto Block | true | 总开关。关掉时只学习、只写日志 |
+| Detect Range | 5 | 只观察这个距离（米）内的敌人 |
 | Log Learning | true | 每次学到命中点写一行日志 |
-| Log Attempts | false | 每次模拟按压写一行日志，调参用 |
+| Log Attempts | true | 每次模拟按压写一行日志，调参用 |
 | Force Block Test | false | 诊断：每帧强制按住格挡键 |
 
 `[Learning]`
@@ -79,7 +79,7 @@
 |---|---|---|
 | Lead Ms | 70 | 命中前多少毫秒按下。固定值，不做自适应 |
 | Press Tail Ms | 150 | 命中后继续按多久，兜预测误差 |
-| Min Samples | 3 | 同一动作要几次样本才算学会 |
+| Min Samples | 5 | 同一动作要几次样本才算学会 |
 | Max Spread | 0.05 | 命中点离散度上限，太散的动作不采用 |
 
 `[Feedback]`
@@ -89,7 +89,7 @@
 | Reliable Perfect Block | true | 完美格挡无视破防规则 |
 | Cancel Swing On Manual Block | true | 手动格挡取消挥刀（自动格挡永不触发这条） |
 | Release Block On Attack | true | 完美后你一攻击就立刻松盾 |
-| Hold After Perfect (ms) | 0 | 完美命中后额外按住多久。0~150 与按压尾巴等效；250 以上会遮住收盾动作，多敌人时把下一击变成普通格挡 |
+| Hold After Perfect (ms) | 500 | 完美命中后额外按住多久；0~150 与按压尾巴等效，500 是调参时用的值 |
 | After Perfect Block | Release | `Release` = 按住上面那段时间就松；`Keep` = 一直挡到你攻击或再按格挡 |
 | Show Perfect Flash | true | 屏幕中央 PERFECT BLOCK |
 
@@ -98,7 +98,7 @@
 | 键 | 默认 | 说明 |
 |---|---|---|
 | Show Combat Text | true | 显示我们自己的伤害数字 |
-| Show Vanilla Numbers | false | 保留游戏自带浮动数字（会和我们的重叠） |
+| Show Vanilla Numbers | true | 保留游戏自带浮动数字（会和我们的重叠） |
 | Font | Impact | 数字字体（与 PERFECT BLOCK 同一套） |
 | Label Font | Microsoft YaHei | 括号里伤害类型的字体，必须有中文字形 |
 | Base Font Size | 27 | 普通数字字号 |
@@ -132,7 +132,7 @@
 
 Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ordinary / 4 missed, default settings); **91% with 0 misses in hold mode** (the game's "Toggle Block" accessibility option turned off).
 
-> **This mod has to learn before it can perfect-block.** Each attack of each creature needs its own samples (3 by default, landing-point spread ≤ 5%) before the mod starts pressing for you. A creature you never fought will not be blocked — watching the wind-up is part of the deal.
+> **This mod has to learn before it can perfect-block.** Each attack of each creature needs its own samples (5 by default, landing-point spread ≤ 5%) before the mod starts pressing for you. A creature you never fought will not be blocked — watching the wind-up is part of the deal.
 
 > **Best feel: turn OFF the game's "Toggle Block" accessibility option and use hold-to-block.** Measured: 0 misses in hold mode, vs ~4% in toggle mode (the toggle path flips on key edges and can turn the raised shield back off).
 

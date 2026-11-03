@@ -1,5 +1,17 @@
 # 版本记录
 
+## 0.3.3
+
+参数调整（默认值改成作者实测最顺手的一套，老玩家已生成的 cfg 不受影响）：
+
+- `Enable Auto Block` 默认开启
+- `Detect Range` 25 → 5 米
+- `Log Attempts` 默认开启
+- `Min Samples` 3 → 5
+- `Hold After Perfect (ms)` 0 → 500
+- `Show Vanilla Numbers` 默认开启
+- `Lead Ms 70` / `Press Tail Ms 150` / `Base Font Size 27` / `Big Hit Scale 2.4` / 数字位置 `0.2,0.6` 与 `0.7,0.6` 保持上一版
+
 ## 0.3.2
 
 - 文档：README 封面图改到 jsDelivr（固定 commit 地址），解决 GitHub / Thunderstore 页面上演示 GIF 裂图的问题（原图 19–38MB，超出图片代理与 CDN 的 20MB 上限，已重新编码到 2–4MB）
