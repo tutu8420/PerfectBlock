@@ -9,11 +9,11 @@
 
 > **最佳手感：关闭游戏「辅助功能」里的「切换格挡」，用长按模式。** 实测长按模式 0 漏挡，切换模式因为靠按键边沿翻转，约 4% 的几率会把盾关掉（见下面的实测数据）。
 
-![自动完美格挡](https://raw.githubusercontent.com/tutu8420/PerfectBlock/main/docs/images/auto-perfect-block.gif)
+![自动完美格挡](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block.gif)
 
-![多目标格挡](https://raw.githubusercontent.com/tutu8420/PerfectBlock/main/docs/images/auto-perfect-block-multi.gif)
+![多目标格挡](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block-multi.gif)
 
-![战斗数字 UI](https://raw.githubusercontent.com/tutu8420/PerfectBlock/main/docs/images/perfect-block-ui.gif)
+![战斗数字 UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/perfect-block-ui.gif)
 
 ## 设计意图
 
