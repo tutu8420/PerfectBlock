@@ -1,4 +1,99 @@
-# Perfect Block 完美格挡（成功率高达 90%）
+# Perfect Block — up to a 90% perfect-block rate
+
+A **block assist** mod: it watches each enemy's attack, learns the exact moment the hit lands, and presses block for you just before it. Nothing in the damage pipeline is modified — the mod feeds the same block key and lets the game run its own perfect-block rule.
+
+Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ordinary / 4 missed, default settings); **91% with 0 misses in hold mode** (the game's "Toggle Block" accessibility option turned off).
+
+> **This mod has to learn before it can perfect-block.** Each attack of each creature needs its own samples (5 by default, landing-point spread ≤ 5%) before the mod starts pressing for you. A creature you never fought will not be blocked — watching the wind-up is part of the deal.
+
+> **Best feel: turn OFF the game's "Toggle Block" accessibility option and use hold-to-block.** Measured: 0 misses in hold mode, vs ~4% in toggle mode (the toggle path flips on key edges and can turn the raised shield back off).
+
+![Perfect block](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block.gif)
+
+![Multiple enemies](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block-multi.gif)
+
+![Combat text UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/perfect-block-ui.gif)
+
+## Why it deliberately does not block while you are swinging
+
+This is a self-imposed handicap, not an unfinished feature. An assist should not eat the player's attacks or every fight would play itself. `Cancel Swing On Manual Block` therefore only reacts to a block **you** press; the automatic press never interrupts your swing.
+
+## What it does
+
+- Learns `(prefab, animation state) → animation progress at the moment damage fires`, stored in `BepInEx/config/PerfectBlock/learned.json`
+- Presses block `Lead Ms` (70) before the learned landing point and keeps it down for `Press Tail Ms` (150) after it
+- Works with both block modes; hold mode is the recommended one
+- Optional: manual-block swing cancel, Reliable perfect block (no guard break on a perfect), on-screen `PERFECT BLOCK !!!`
+- Floating combat numbers: `weapon icon 78 (Pierce)`, red for damage taken (left), yellow for damage dealt (right); position / size / font adjustable
+
+## Measured (2026-11-03, v0.3.x, defaults)
+
+| Block mode | Resolved | Perfect | Ordinary | Missed | Perfect rate |
+|---|---|---|---|---|---|
+| **Hold (Toggle Block off)** | 45 | 41 | 4 | **0** | **91%** |
+| Toggle (Toggle Block on) | 100 | 90 | 6 | 4 | 90% |
+| Total | 145 | 131 | 10 | 4 | 90.3% |
+
+## Install
+
+Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `PerfectBlock.*.yml` into `BepInEx/plugins/ChineseCanFly-PerfectBlock/`, start the game once, then edit `BepInEx/config/ChineseCanFly.PerfectBlock.cfg` (or use Configuration Manager).
+
+## Limitations
+
+- Learning is per prefab + animation state, so a new creature or a new attack starts at zero samples.
+- No auto block while you are swinging (by design).
+- Toggle-block mode misses ~4% of hits; hold mode does not.
+- Landing points come from animation progress, so lag or knockback can shift them; a late press is an ordinary block, never a free hit.
+
+## Config
+
+`[General]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| Enable Auto Block | true | Master switch. When off the mod only learns and logs |
+| Detect Range | 5 | Only watch enemies within this many metres |
+| Log Learning | true | One log line per recorded landing point |
+| Log Attempts | true | One log line per simulated press (tuning) |
+| Force Block Test | false | Diagnostic: hold the block key every frame |
+
+`[Learning]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| Lead Ms | 70 | Press this many ms before the learned landing point. Fixed, no adaptation |
+| Press Tail Ms | 150 | Keep pressing this long after the landing point |
+| Min Samples | 5 | Samples needed before an attack counts as learned |
+| Max Spread | 0.05 | Max spread of the landing points; wider = ignored |
+
+`[Feedback]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| Reliable Perfect Block | true | Ignore the guard-break rule on a perfect block |
+| Cancel Swing On Manual Block | true | Blocking mid-swing cancels the swing (manual presses only) |
+| Release Block On Attack | true | Drop the forced block the moment you attack |
+| Hold After Perfect (ms) | 500 | **Must be 500.** Upgraders: change it by hand, 0 makes blocking fail |
+| After Perfect Block | Release | `Release` = let go after the hold; `Keep` = hold until you attack or tap block |
+| Show Perfect Flash | true | `PERFECT BLOCK !!!` in the middle of the screen |
+
+`[Combat]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| Show Combat Text | true | Draw our own damage numbers |
+| Show Vanilla Numbers | true | Keep the game's floating numbers |
+| Font | Impact | Number font (same as the PERFECT BLOCK flash) |
+| Label Font | Microsoft YaHei | Font for the bracketed damage type, must carry Chinese glyphs |
+| Base Font Size | 27 | Normal number size |
+| Big Hit Scale | 2.4 | Size multiplier for heavy / finisher hits |
+| Show Weapon Icon | true | Draw the weapon icon in front of each number |
+| Taken / Dealt Position X/Y | 0.2/0.6, 0.7/0.6 | Screen-ratio anchors |
+| Test Combat Text | false | Diagnostic: always draw three sample numbers |
+
+---
+
+## 完美格挡（成功率高达 90%）
 
 一个**辅助**模组：观察每只怪物的攻击动作，学出它真正命中的那一刻，然后在命中前替你按下格挡。不修改伤害结算，也不改写格挡判定——按下去的是同一个「格挡键」，剩下的交给游戏自己判。
 
@@ -8,12 +103,6 @@
 > 每只怪物的每套攻击动作都要单独攒样本（默认 5 次、命中点离散度 ≤ 5%），凑够了才会开始替你按。没打过的怪，它不会挡——先看清招式，是这个模组的一部分。
 
 > **最佳手感：关闭游戏「辅助功能」里的「切换格挡」，用长按模式。** 实测长按模式 0 漏挡，切换模式因为靠按键边沿翻转，约 4% 的几率会把盾关掉（见下面的实测数据）。
-
-![自动完美格挡](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block.gif)
-
-![多目标格挡](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block-multi.gif)
-
-![战斗数字 UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/perfect-block-ui.gif)
 
 ## 设计意图
 
@@ -125,44 +214,3 @@
 有问题或建议：<https://github.com/tutu8420/PerfectBlock/issues>
 
 ---
-
-## English
-
-**Perfect Block — up to a 90% perfect-block rate.** A **block assist** mod: it watches each enemy's attack, learns the exact moment the hit lands, and presses block for you just before it. Nothing in the damage pipeline is modified — the mod feeds the same block key and lets the game run its own perfect-block rule.
-
-Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ordinary / 4 missed, default settings); **91% with 0 misses in hold mode** (the game's "Toggle Block" accessibility option turned off).
-
-> **This mod has to learn before it can perfect-block.** Each attack of each creature needs its own samples (5 by default, landing-point spread ≤ 5%) before the mod starts pressing for you. A creature you never fought will not be blocked — watching the wind-up is part of the deal.
-
-> **Best feel: turn OFF the game's "Toggle Block" accessibility option and use hold-to-block.** Measured: 0 misses in hold mode, vs ~4% in toggle mode (the toggle path flips on key edges and can turn the raised shield back off).
-
-### Why it deliberately does not block while you are swinging
-
-This is a self-imposed handicap, not an unfinished feature. An assist should not eat the player's attacks or every fight would play itself. `Cancel Swing On Manual Block` therefore only reacts to a block **you** press; the automatic press never interrupts your swing.
-
-### What it does
-
-- Learns `(prefab, animation state) → animation progress at the moment damage fires`, stored in `BepInEx/config/PerfectBlock/learned.json`
-- Presses block `Lead Ms` (70) before the learned landing point and keeps it down for `Press Tail Ms` (150) after it
-- Works with both block modes; hold mode is the recommended one
-- Optional: manual-block swing cancel, Reliable perfect block (no guard break on a perfect), on-screen `PERFECT BLOCK !!!`
-- Floating combat numbers: `weapon icon 78 (Pierce)`, red for damage taken (left), yellow for damage dealt (right); position / size / font adjustable
-
-### Measured (2026-11-03, v0.3.x, defaults)
-
-| Block mode | Resolved | Perfect | Ordinary | Missed | Perfect rate |
-|---|---|---|---|---|---|
-| **Hold (Toggle Block off)** | 45 | 41 | 4 | **0** | **91%** |
-| Toggle (Toggle Block on) | 100 | 90 | 6 | 4 | 90% |
-| Total | 145 | 131 | 10 | 4 | 90.3% |
-
-### Install
-
-Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `PerfectBlock.*.yml` into `BepInEx/plugins/ChineseCanFly-PerfectBlock/`, start the game once, then edit `BepInEx/config/ChineseCanFly.PerfectBlock.cfg` (or use Configuration Manager).
-
-### Limitations
-
-- Learning is per prefab + animation state, so a new creature or a new attack starts at zero samples.
-- No auto block while you are swinging (by design).
-- Toggle-block mode misses ~4% of hits; hold mode does not.
-- Landing points come from animation progress, so lag or knockback can shift them; a late press is an ordinary block, never a free hit.
