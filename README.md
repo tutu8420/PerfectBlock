@@ -89,7 +89,7 @@
 | Reliable Perfect Block | true | 完美格挡无视破防规则 |
 | Cancel Swing On Manual Block | true | 手动格挡取消挥刀（自动格挡永不触发这条） |
 | Release Block On Attack | true | 完美后你一攻击就立刻松盾 |
-| Hold After Perfect (ms) | 500 | 完美命中后额外按住多久；0~150 与按压尾巴等效，500 是调参时用的值 |
+| Hold After Perfect (ms) | 500 | 完美命中后额外按住多久。**必须是 500**；从旧版本升级的玩家请手动改（旧 cfg 里可能是 0，会导致挡不住） |
 | After Perfect Block | Release | `Release` = 按住上面那段时间就松；`Keep` = 一直挡到你攻击或再按格挡 |
 | Show Perfect Flash | true | 屏幕中央 PERFECT BLOCK |
 

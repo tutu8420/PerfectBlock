@@ -2,13 +2,17 @@
 
 ## 0.3.3
 
-参数调整（默认值改成作者实测最顺手的一套，老玩家已生成的 cfg 不受影响）：
+> **⚠️ 从 0.3.2 及更早版本升级的玩家：请手动把 `Hold After Perfect (ms)` 改成 `500`（配置里原来是多少就改成 500）。**
+> 升级不会重写你已生成的 cfg，旧值留在 0 的话格挡会失效/挡不住——这个值必须手动改。
+> 全新安装的玩家不用管，默认已经是 500。
+
+参数调整（默认值改成实测最顺手的一套）：
 
 - `Enable Auto Block` 默认开启
 - `Detect Range` 25 → 5 米
 - `Log Attempts` 默认开启
 - `Min Samples` 3 → 5
-- `Hold After Perfect (ms)` 0 → 500
+- `Hold After Perfect (ms)` 0 → **500**（升级用户请手动改，见上）
 - `Show Vanilla Numbers` 默认开启
 - `Lead Ms 70` / `Press Tail Ms 150` / `Base Font Size 27` / `Big Hit Scale 2.4` / 数字位置 `0.2,0.6` 与 `0.7,0.6` 保持上一版
 
