@@ -1,5 +1,7 @@
 # Perfect Block — up to a 90% perfect-block rate
 
+> 看到格挡我想起了dark and darker 本意是想做长剑格挡加入新的格挡动作，但是我不擅长做模型和动画就搁置了，在开发战斗UI我想起了WOW，大概20年前非常著名的parrot战斗UI插件，于是通过考古视频和代码我将部分功能移植了过来，这该死的回忆哈哈哈哈
+
 A **block assist** mod: it watches each enemy's attack, learns the exact moment the hit lands, and presses block for you just before it. Nothing in the damage pipeline is modified — the mod feeds the same block key and lets the game run its own perfect-block rule.
 
 Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ordinary / 4 missed, default settings); **91% with 0 misses in hold mode** (the game's "Toggle Block" accessibility option turned off).
@@ -8,11 +10,13 @@ Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ord
 
 > **Best feel: turn OFF the game's "Toggle Block" accessibility option and use hold-to-block.** Measured: 0 misses in hold mode, vs ~4% in toggle mode (the toggle path flips on key edges and can turn the raised shield back off).
 
-![Perfect block](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block.gif)
+![Perfect block in combat](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/perfect-block-combat.gif)
 
-![Multiple enemies](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/auto-perfect-block-multi.gif)
+![Perfect block](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/auto-perfect-block.gif)
 
-![Combat text UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@cfb3376da12b446d93ba0cdb95dfaf09959ffefd/docs/images/perfect-block-ui.gif)
+![Multiple enemies](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/auto-perfect-block-multi.gif)
+
+![Combat text UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/perfect-block-ui.gif)
 
 ## Why it deliberately does not block while you are swinging
 
@@ -128,7 +132,7 @@ Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `Perf
 | 手动格挡取消挥刀 | 挥刀途中按格挡 → 立即断招起盾（等价 AttackCancel） |
 | Reliable Perfect Block | 只在完美格挡那一下忽略「大伤害破防」规则 |
 | 完美提示 | 屏幕中央 `PERFECT BLOCK !!!`，连续触发向上叠加 |
-| 战斗数字 | `武器图标 78 (刺击)`，承伤红色在左、输出黄色在右；位置/字号/字体可调 |
+| 战斗数字 | `武器图标 78 （劈砍）`，承伤红色在左、输出黄色在右；伤害类型直接用游戏面板的词条，位置/字号/字体可调 |
 
 ## 实测数据
 
@@ -157,10 +161,12 @@ Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `Perf
 | 键 | 默认 | 说明 |
 |---|---|---|
 | Enable Auto Block | true | 总开关。关掉时只学习、只写日志 |
-| Detect Range | 5 | 只观察这个距离（米）内的敌人 |
+| Detect Range | 10 | 只观察这个距离（米）内的敌人 |
 | Log Learning | true | 每次学到命中点写一行日志 |
 | Log Attempts | true | 每次模拟按压写一行日志，调参用 |
 | Force Block Test | false | 诊断：每帧强制按住格挡键 |
+| Show Vanilla Numbers | false | 保留游戏自带的浮动数字（会和我们的重叠）。挖矿/砍树也归我们管，同样受这个开关控制 |
+| Test All UI | false | 诊断：每 0.8 秒生成一批示例条目，只在世界里生效 |
 
 `[Learning]`
 
@@ -181,20 +187,45 @@ Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `Perf
 | Hold After Perfect (ms) | 500 | 完美命中后额外按住多久。**必须是 500**；从旧版本升级的玩家请手动改（旧 cfg 里可能是 0，会导致挡不住） |
 | After Perfect Block | Release | `Release` = 按住上面那段时间就松；`Keep` = 一直挡到你攻击或再按格挡 |
 | Show Perfect Flash | true | 屏幕中央 PERFECT BLOCK |
+| Flash Position X / Y | 0.5 / 0.216 | 闪字锚点（屏幕比例） |
+| Flash Font Size | 6 | 字号，按屏幕高度百分比 |
+| Flash Duration (s) | 2 | 停留时长 |
+| Flash Animation | Punch | Punch / Pop / Slam / Slide / Shake |
+| Flash Color | #FFD21A | HTML 十六进制 |
 
 `[Combat]`
 
 | 键 | 默认 | 说明 |
 |---|---|---|
 | Show Combat Text | true | 显示我们自己的伤害数字 |
-| Show Vanilla Numbers | true | 保留游戏自带浮动数字（会和我们的重叠） |
-| Font | Impact | 数字字体（与 PERFECT BLOCK 同一套） |
-| Label Font | Microsoft YaHei | 括号里伤害类型的字体，必须有中文字形 |
-| Base Font Size | 27 | 普通数字字号 |
+| Font | **Norsebold** | 数字字体。**首位 Norsebold 就是游戏原版字体，强烈推荐**；其余 Averia / Noto / prstartk 也都是游戏自带，不用安装 |
+| Label Font | **Norsebold** | 括号里伤害类型的字体。同样推荐 Norsebold；它没有中文字形，中文文案会自动回退到游戏的 Noto |
+| English Labels | true | 格挡行与伤害类型用英文（Block / Parry / Slash）。配 Norse 字体时必须打开 |
+| Base Font Size | 30 | 普通数字字号 |
 | Big Hit Scale | 2.4 | 重击/连段末击的放大倍数 |
 | Show Weapon Icon | true | 数字前画武器图标（承伤用攻击者的武器） |
-| Taken / Dealt Position X/Y | 0.2/0.6、0.7/0.6 | 屏幕比例锚点，0~1 |
-| Test Combat Text | false | 诊断：常显三个示例数字，用来定位并确认渲染 |
+| Taken / Dealt Position X/Y | 0.3/0.6、0.7/0.6 | 屏幕比例锚点，0~1 |
+| Animation Style | Static | 15 种 Parrot 风格滚动动画 |
+| Scroll Direction | UP;RIGHT | 方向，格式同 Parrot |
+| Scroll Size | 1 | 飞行距离倍率（基础 40 像素/单位，是像素不是字号） |
+| Line Spacing | 1 | 叠放行距（行槽倍数） |
+| Max Lines | 8 | 只对 Static / Static2 生效 |
+| Fade Start (%) | 60 | 生命周期到这个百分比开始淡出 |
+| Text Duration (s) | 1.2 | 每条数字存活时间 |
+| Show Block Text | true | 受伤区显示 `Block(12)` / `Parry(0.5)` |
+
+`[Buff Panel]`
+
+| 键 | 默认 | 说明 |
+|---|---|---|
+| Show Buff Panel | true | 格挡后列出获得的状态效果（图标、名称、剩余时间、层数）与肾上腺素 |
+| Only Buffs From Perfect Block | true | 只列完美格挡瞬间出现的那些 |
+| Show Counter Window | true | 反击窗口进度条 + 当前连段段数 |
+| Log Perfect Block Buffs | true | 诊断：每次完美格挡把状态效果写进日志 |
+| Temp Buff X / Y | 0.624 / 0.4 | 面板锚点（屏幕比例） |
+| Buff Scale | 1.5 | 面板缩放 |
+| Buff Linger (s) | 1 | 效果结束后图标还留多久 |
+| Buff Max Rows | 1 | 最多显示几行 |
 
 ## 已知限制
 
@@ -214,3 +245,125 @@ Requires **BepInEx 5.4.x**. Drop `ChineseCanFly.PerfectBlock.dll` and both `Perf
 有问题或建议：<https://github.com/tutu8420/PerfectBlock/issues>
 
 ---
+
+## Feedback UI and buff panel (v1.5)
+
+- **PERFECT BLOCK flash**: position X/Y, font size (percent of screen height), colour and duration are configurable, with five animations - Pop (the old drop-in), Punch (huge snap-back like a fighting game hit), Slam (falls from above and shakes), Slide (flies in from the right with after-images) and Shake.
+- **Buff panel**: what a perfect block actually gave you - every status effect that appeared with the block is listed with its icon, localised name, remaining time and stack count, plus the adrenaline it added.
+- **Counter window**: a shrinking bar shows how long the forced block stays down - the window in which your swings keep their attack chain - and the current chain stage (e.g. 2/3).
+- **Diagnostic**: Log Perfect Block Buffs writes the effects seen right after a perfect block (with remaining time) to the BepInEx log.
+
+## 反馈 UI 与 BUFF 面板（v1.5）
+
+- **完美提示**：位置 X/Y、字号（屏幕高度百分比）、颜色、停留时长都可调；新增五种动画：Pop（原来的落下）、Punch（巨大弹出回弹）、Slam（从上方砸下并抖动）、Slide（从右侧滑入带残影）、Shake（定住后抖动收敛）。
+- **BUFF 面板**：完美格挡到底给了你什么——紧接着出现的状态效果会逐个列出（图标、本地化名称、剩余时间、层数），并显示肾上腺素增量。
+- **反击窗口**：进度条显示强制格挡剩余时间（就是连击保持段位的窗口），并显示当前连击段数（如 2/3）。
+- **诊断**：Log Perfect Block Buffs 会把完美格挡瞬间的状态效果与剩余时间写进 BepInEx 日志。
+
+### v1.5.1 changes
+
+- `Punch` is now the default and first animation - the author's pick after testing.
+- Buff panel split into **permanent** and **temporary** columns, each with its own anchor. Temporary = effects that actually have a duration of `Temp Buff Max Duration` seconds or less (Bloodrage and friends); everything else (food, gear, levels) is permanent. Effects without a duration no longer show a bogus negative timer.
+- **Adrenaline** now always shows after a perfect block, in the temporary column (`+5 (5/100)`), regardless of `Only Buffs From Perfect Block`.
+- `Hide Vanilla Buff Icons` (on by default) hides the game's own status icons - and My Little UI's repositioned copy of them - while the panel is on.
+- Damage numbers now fly up and to the right on an ease-out curve and fade, WoW scrolling-combat-text style; crits and combo finishers get the same punch scale as the PERFECT BLOCK text (Parrot addon's "Pow" style as reference).
+
+### v1.5.1 变更
+
+- `Punch` 改为默认动画并排第一——实测效果最好。
+- BUFF 面板拆成**常驻**和**临时**两列，位置各自可调。临时 = 确实有持续时间且不超过 `Temp Buff Max Duration` 秒的效果（血怒这类）；其余（食物、装备、等级）算常驻。没有持续时间的效果不再显示负数倒计时。
+- **肾上腺素**现在必定显示在临时列（`+5 (5/100)`），不受 `Only Buffs From Perfect Block` 影响。
+- `Hide Vanilla Buff Icons`（默认开）：面板开启时隐藏游戏自带状态图标，以及 My Little UI 改过位置的那份，避免两套叠着。
+- 伤害数字改为向右上方缓出滑动并淡出（WoW 滚动战斗文字风格）；暴击/连击终结沿用 PERFECT BLOCK 同款 Punch 缩放（参考 Parrot 插件的 Pow 动画）。
+
+### v1.6.0 changes
+
+- **Damage numbers now come from the game itself**: the mod hooks `DamageText.ShowText` and uses the exact value vanilla would have drawn, so the numbers match to the digit. No more computed numbers.
+- **All 15 Parrot animation styles** ported 1:1: Straight, Parabola, Semicircle, Pow, Pow2, Static, Static2, Rainbow, Horizontal, Action, Action Sticky, Angled, Angled2, Sprinkler, Sprinkler2, with Parrot's direction scheme (`UP;RIGHT`, `UP;ALT`, ...), plus Scroll Size / Line Spacing / Max Lines / Fade Start / Duration.
+- **Block and parry text** (Parrot's avoid events): ordinary block shows `格挡`, a perfect block shows `招架!` on the left (taken) side; own position sliders.
+- `Test All UI` moved to `[General]` and now draws every overlay at once.
+- Permanent buff column removed - the buff panel only shows the temporary buffs a perfect block gave you, plus the adrenaline gain.
+
+### v1.6.0 变更
+
+- **伤害数字改为直接取原版的数值**：挂 `DamageText.ShowText`，用游戏自己算好的那个数字，逐位一致，不再自己计算。
+- **15 种 Parrot 动画全部移植**：Straight / Parabola / Semicircle / Pow / Pow2 / Static / Static2 / Rainbow / Horizontal / Action / Action Sticky / Angled / Angled2 / Sprinkler / Sprinkler2，方向沿用 Parrot 的写法（`UP;RIGHT`、`UP;ALT` 等），另有滚动距离、行距、层数、淡出起点、存活时长。
+- **格挡/招架提示**（抄 Parrot 的 avoid 事件）：普通格挡显示 `格挡`，完美格挡显示 `招架!`，在左侧受伤区，位置可调。
+- `Test All UI` 移到 `[General]`，一次画出所有 UI。
+- 删除常驻 BUFF 列——BUFF 面板只显示完美格挡给你的临时 BUFF 和肾上腺素增量。
+
+### v1.6.1 fixes
+
+- Damage numbers show again: `ApplyDamage` (where we know whose hit it is) now only records what to draw, and `DamageText.ShowText` creates it with the game's own value. The old code looked for the vanilla number before the game had produced it.
+- Vanilla floating numbers are hidden again: my 1.6.0 edit moved the `[HarmonyPatch]` attribute off `PatchHideVanillaNumbers`, so that patch had no target and failed (visible as "Patch failed" in the log).
+- Block/parry text is now `+格挡` / `+招架` (no exclamation mark), like Parrot.
+- `Test All UI` now spawns real entries every 0.8 s through the normal pipeline, so changing the animation style or direction is visible immediately.
+
+### v1.6.1 修复
+
+- 伤害数字恢复显示：`ApplyDamage`（能判断归属的地方）现在只记录“要画什么”，由 `DamageText.ShowText` 用原版数值创建文本。旧代码在原版生成数字之前就去取，永远取不到。
+- 原版浮动数字重新被隐藏：1.6.0 我插入新补丁类时把 `[HarmonyPatch]` 属性挤掉了，`PatchHideVanillaNumbers` 没有目标方法，日志里就是那条 "Patch failed"。
+- 格挡/招架文本改为 `+格挡` / `+招架`（去掉感叹号），与 Parrot 一致。
+- `Test All UI` 改为每 0.8 秒真实生成一批条目，走完整动画管线，改样式/方向立刻可见。
+
+### v1.6.2
+
+- `Show Vanilla Numbers` moved to `[General]`.
+- Vanilla number hiding is now exact: the only thing suppressed is the damage number that our overlay actually replaced. Heal "+N", craft bonus and "Too Hard" texts are untouched again (the old patch was hiding the wrong overload).
+- Mining/chopping damage numbers stay vanilla on purpose: our numbers need a `Character` hit to know whose damage it is, and destructibles do not provide one.
+
+### v1.6.2
+
+- `显示原版数字` 移到 `[General]`
+- 原版数字的隐藏改为“只隐藏我们真正替换掉的那一条”。治疗 `+N`、制作奖励、“太硬了”这些文本不再被误隐藏（旧补丁隐藏的是错误的重载）
+- 挖矿/砍树的数字保持原版：我们的数字依赖 `Character` 的命中信息判断归属，矿和树没有这个信息
+
+### v1.6.3
+
+- Block text now lives in the taken column, formatted `+ 格挡 （0.5）` (value taken from the game's blocked number). A perfect block uses the crit size and the crit punch, so it reads as the "reward" version.
+- The separate block/parry position sliders are gone - the taken anchor drives it.
+
+### v1.6.3
+
+- 格挡提示并入受伤区，格式 `+ 格挡 （0.5）`，数值取自游戏自己的格挡数字；完美格挡按暴击处理（更大字号 + Punch）。
+- 删除了独立的格挡/招架位置开关，统一用受伤区锚点。
+
+### v1.6.4
+
+- Mining, chopping and hitting buildings now draw through our text too: `[weapon icon] +12 （劈砍）`, with the damage type taken from the hit (chop/pierce/blunt/frost/fire/spirit...). Covered: `Destructible`, `TreeBase`, `TreeLog`, `MineRock`, `MineRock5`.
+- Only the player's own hits are taken over; environmental or other damage keeps the vanilla number.
+
+### v1.6.4
+
+- 挖矿、砍树、砸建筑也走我们的字体：`[武器图标] +12 （劈砍）`，标签取这一击的主伤害类型（劈砍/戳刺/锤击/冰霜/火焰/精神…）。已覆盖 `Destructible`、`TreeBase`、`TreeLog`、`MineRock`、`MineRock5`。
+- 只接管玩家自己造成的伤害，环境伤害仍用原版数字。
+
+### v1.6.5
+
+- The damage-type tag is no longer our own translation: it is looked up from the game's own `$inventory_*` tokens, so it matches the weapon panel word for word and follows the game language. Simplified Chinese yields 劈砍 / 戳刺 / 锤击 / 切剁 / 镐 / 火焰 / 冰霜 / 闪电 / 蛊毒 / 精神.
+- Fixed invented terms: Slash is 劈砍 (not Chop), Pierce is 戳刺, Poison is 蛊毒.
+- Brackets are now full width with a space in front, `+12 （劈砍）`, matching the block line `+ 格挡 （0.5）`.
+- Pickaxe is now considered when picking the majority damage type.
+
+### v1.6.5
+
+- 伤害类型标签不再自己翻译，直接查游戏自己的 `$inventory_*` 词条，和武器面板逐字一致，并且跟随游戏语言。简体下是 劈砍 / 戳刺 / 锤击 / 切剁 / 镐 / 火焰 / 冰霜 / 闪电 / 蛊毒 / 精神。
+- 修正之前编错的词：Slash 是「劈砍」（之前误当成 Chop），Pierce 是「戳刺」，Poison 是「蛊毒」。
+- 括号改全角并在前面留空格：`+12 （劈砍）`，与格挡行 `+ 格挡 （0.5）` 同一套写法。
+- 判定主伤害类型时补上了镐（Pickaxe）。
+
+### v1.6.6
+
+- Fixed the numbers never showing up: the `PatchVanillaDamageText` hook lost its registration back in 1.6.2, so `Show Vanilla Numbers` was flipping a switch that no longer did anything and our own text was never created.
+- Fixed the capture order: this build of the game draws its number from *inside* `Character.ApplyDamage`, while we recorded the pending hit in the postfix. It is now recorded in the prefix and consumed by the `DamageText.ShowText` prefix.
+- `Test All UI` only runs inside a world now, not in the main menu.
+- The startup log prints the real version instead of a hard-coded 0.3.3.
+- Added `damage text` / `blocked number` / `block text` diagnostics (behind `Log Attempts`).
+
+### v1.6.6
+
+- 修复战斗数字完全不显示：`PatchVanillaDamageText` 在 1.6.2 时连注册一起被删了，所以 `Show Vanilla Numbers` 控制的是个不存在的开关，我们自己的数字也从未被创建。
+- 修复数值捕捉时机：这一版游戏是在 `Character.ApplyDamage` 内部就把数字画出来的，而我们在 postfix 才记 pending。改为前缀记录、`DamageText.ShowText` 前缀消费。
+- `Test All UI` 只在进入世界后生效，主菜单不再刷测试文字。
+- 启动日志显示真实版本号，不再硬编码 0.3.3。
+- 新增 `damage text` / `blocked number` / `block text` 诊断日志（受 `Log Attempts` 控制）。
