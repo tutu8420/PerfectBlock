@@ -12,12 +12,6 @@ Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ord
 
 ![Perfect block in combat](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/perfect-block-combat.gif)
 
-![Perfect block](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/auto-perfect-block.gif)
-
-![Multiple enemies](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/auto-perfect-block-multi.gif)
-
-![Combat text UI](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/perfect-block-ui.gif)
-
 ## Why it deliberately does not block while you are swinging
 
 This is a self-imposed handicap, not an unfinished feature. An assist should not eat the player's attacks or every fight would play itself. `Cancel Swing On Manual Block` therefore only reacts to a block **you** press; the automatic press never interrupts your swing.
