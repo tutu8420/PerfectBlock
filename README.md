@@ -10,7 +10,7 @@ Measured **90.3%** perfect blocks across 145 resolved hits (131 perfect / 10 ord
 
 > **Best feel: turn OFF the game's "Toggle Block" accessibility option and use hold-to-block.** Measured: 0 misses in hold mode, vs ~4% in toggle mode (the toggle path flips on key edges and can turn the raised shield back off).
 
-![Perfect block in combat](https://gcore.jsdelivr.net/gh/tutu8420/PerfectBlock@9c36a2453b340a405d335598b669daea58dee622/docs/images/perfect-block-combat.gif)
+![Perfect block in combat](https://raw.githubusercontent.com/tutu8420/PerfectBlock/cb67606f47a280356b4eaa57bedca1be3495030b/docs/images/perfect-block-combat.gif)
 
 ## Why it deliberately does not block while you are swinging
 
